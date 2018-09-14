@@ -11,8 +11,10 @@ import os
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 @app.route('/')
+@app.route('/home')
 def check():
     print("went into and running")
+    
 
 if __name__ == '__main__':
     app.run(debug=True)

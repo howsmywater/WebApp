@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+.mySlides {display:none}
+.w3-left, .w3-right, .w3-badge {cursor:pointer}
+.w3-badge {height:13px;width:13px;padding:0}
+</style>
+<body id = "aboutPage" data-spy="scroll" data-target = ".navbar" data-offset="60" style = "padding:0px; height: auto;">
+  <div class = "jumbotron text-center" style = "background-size: cover; padding: 80px 25px; margin-bottom:0; margin-top:40px; border-radius:0;">
+    <div class ="company-title" style = "">
+      <h1>Sneak Em.</h1>
+      <p>Bringing select content to you.</p>
+    </div>
+  </div>
+  <div id = "info" class = "container-fluid" style = "background-color: white;">
+    <div class = "row">
+      <div class = "col-sm-8">
+        <br><h2>What We Do?</h2><br>
+        <div class = "desc" style="max-width: 600px; margin-left:auto; margin-right: auto;">
+          <h4 >Here at Sneak Em we make it our mission to bring exclusive and limited content right to your fingertips. With a network of associates around the globe, we ensure that we get the latest and greatest.</h4><br>
+          <p>Have you experienced waiting in line for up to 3 hours? Yup. Us too. We know just how badly you want those new kicks coming out next season, and we ensure that you can reserve a set right off the bat by making an account with us and placing an order on that item. We make it our job to ensure that we have plenty of stock to send out to our exclusive members.</p><br>
+        </div>
+      </div>
+      <div class = "col-sm-4">
+        <span class ="glyphicon glyphicon-globe logo" style = "font-size:230px; padding:50px 10px; color: #ff6000de;"></span>
+      </div>
+    </div>
+  </div>
+  <div id = "mission" class = "container-fluid bg-grey" style = "padding-top: 20px; background-color: #f3f3f3;">
+    <div class = "col-sm-4">
+      <span class ="glyphicon glyphicon-tasks logo" style = "font-size:200px; color: #ff6000de; padding:50px 10px" src = "{{ url_for('static', filename = 'hanger.png') }}"></span>
+    </div>
+    <div class = "col-sm-8" style="padding-bottom: 20px;">
+      <br><h2>Our Partnerships</h2><br>
+      <div class = "desc" style="max-width: 600px; margin-left:auto; margin-right: auto;">
+        <h4>We have close partnerships with a variety of different companies who set aside a number of boxes of new gear to send to us for members</h4><br>
+        <p>We currently have live partnerships with three different companies and are in talks with another six. Our Expansion Team is currently focused on bringing more comapnies into the fold; giving you access to more merchandise.</p><br>
+      </div>
+    </div>
+  </div>
+  <div id = "services" class = "container-fluid text-center" style = "background-color:white;">
+    <h2>Benefits</h2>
+    <h4>Membership Perks</h4><br>
+    <div class="row">
+      <div class="col-sm-4">
+        <span class="glyphicon glyphicon-time" style = "color: #ff6000de; font-size: 50px;"></span>
+        <h4>PROMPT</h4>
+        <p>Deliveries always on time</p>
+      </div>
+      <div class="col-sm-4">
+        <span class="glyphicon glyphicon-heart" style = "color: #ff6000de; font-size: 50px;"></span>
+        <h4>LOVE</h4>
+        <p>We guarantee you'll love it</p>
+      </div>
+      <div class="col-sm-4">
+        <span class="glyphicon glyphicon-lock" style = "color: #ff6000de; font-size: 50px;"></span>
+        <h4>SECURE</h4>
+        <p>We don't sell your information to 3rd parties</p>
+      </div>
+    </div>
+    <br><br>
+      <div class="row">
+        <div class="col-sm-4">
+          <span class="glyphicon glyphicon-leaf" style = "color: #ff6000de; font-size: 50px;"></span>
+          <h4>GREEN</h4>
+          <p>We only use recycled boxes</p>
+        </div>
+        <div class="col-sm-4">
+          <span class="glyphicon glyphicon-certificate" style = "color: #ff6000de; font-size: 50px;"></span>
+          <h4>CERTIFIED</h4>
+          <p>100% Real or your money back</p>
+        </div>
+        <div class="col-sm-4">
+          <span class="glyphicon glyphicon-wrench" style = "color: #ff6000de; font-size: 50px;"></span>
+          <h4>FIXERS</h4>
+          <p>If you have a problem, we'll fix it</p>
+        </div>
+      </div>
+      <br><br>
+    </div>
+  </div>
+</body>
+{% endblock content %}
