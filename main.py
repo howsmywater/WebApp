@@ -11,10 +11,15 @@ import os
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 @app.route('/')
-@app.route('/home')
+@app.route('/check')
 def check():
-    print("went into and running")
-    
+    print("went into and is running")
+    return render_template('about.html', title = "title")
+
+@app.route('/map')
+def map():
+    return render_template('map.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
