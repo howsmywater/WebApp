@@ -35,7 +35,7 @@ def get_analysis(STATION_NO):
     url = "this"
 
 @app.route('/api/check', methods = ['POST'])
-def checkLocal():
+def checkArea():
     if request.method == "POST":
         activeViol = pd.read_json("activeViolations.json", orient='records')
         activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].str[2:]
@@ -54,9 +54,11 @@ def checkLocal():
                 report[row['WATER_SYSTEM_NUMBER']] = str("Violation Number: "+str(row['VIOLATION_NUMBER'])+", Violation Type: "+str(row['VIOLATION_TYPE_NAME'])+", Chemical: "+str(row['ANALYTE_NAME'])+", Result: "+str(row['RESULT'])+", MCL: "+str(row['MCL'])+", Action issued: "+str(row['ENF_ACTION_TYPE_ISSUED'])+", Action Issue Date: " + date)
             else:
                 report[row['WATER_SYSTEM_NUMBER']] += str("\nViolation Number: "+str(row['VIOLATION_NUMBER'])+", Violation Type: "+str(row['VIOLATION_TYPE_NAME'])+", Chemical: "+str(row['ANALYTE_NAME'])+", Result: "+str(row['RESULT'])+", MCL: "+str(row['MCL'])+", Action issued: "+str(row['ENF_ACTION_TYPE_ISSUED'])+", Action Issue Date: "+date)
-        
+
         return jsonify(report)
 
+@app.route('/api/checkLocal/<int:STATION_NO>', methods = ['POST'])
+def checkLocal(STATION_NO):
 
 
 @app.route('/api/<string:lat>/<string:long>', methods = ["GET"])
@@ -88,7 +90,7 @@ def get_stations(lat, long):
     for station in list:
         point2 = (float(station['latitude']), float(station['longitude']))
         print(point1)
-        distance = geodesic(testPoint, point2)
+        distance = geodesic(point1, point2)
         if distance.km <= 5:
              stationlist['stations'].append(station)
 
