@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import WQResultView from './WQResultView';
+import MapSearch from './MapSearch';
 import { Map as LeafletMap, TileLayer } from 'react-leaflet';
 import styled from 'styled-components';
 
@@ -41,13 +42,23 @@ export default class MapRoot extends Component {
                 <Header>Check your water quality</Header>
                 <MapContainer>
                     <LeafletMap center={[37.87265302, -122.25963921]} zoom={8}>
+                        <MapSearch
+                            didSetLocation={this.didSetLocation.bind(this)}/>
                         <TileLayer
                           attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          detectRetina={true}
                         />
                     </LeafletMap>
                 </MapContainer>
             </Container>
         );
+    }
+
+    /**
+     * Called when location is set
+     */
+    didSetLocation({ lat, lng }) {
+
     }
 }
