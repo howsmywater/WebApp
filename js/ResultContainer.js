@@ -26,12 +26,20 @@ export default class ResultContainer extends MapComponent {
             margin: 0;
         `;
 
+        const Overview = styled.h3`
+        color: rgba(0,0,0,0.4);
+        font-size: 1.3rem;
+        margin: 0;
+        font-weight: 500;
+        `;
+
         this.props.setStationCall(this);
 
         return (
             this.state.station ? (
                 <ResultWrapper>
                     <Header>{ this.state.station.name }</Header>
+                    <Overview>{ this.state.station.text }</Overview>
                 </ResultWrapper>
             ) : <div/>
         );

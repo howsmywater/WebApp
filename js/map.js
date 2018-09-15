@@ -89,7 +89,10 @@ export default class MapRoot extends Component {
             iconSize: [24, 24]
         })
 
-        fetch(`/api/${center.lat}/${center.lng}`)
+        const mapBoundNorthEast = map.getBounds().getNorthEast();
+        const mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
+        const radius = mapDistance / 1000;
+        fetch(`/api/${center.lat}/${center.lng}/${radius}`)
             .then(response => response.json())
             .then(({ stations }) => {
 
@@ -106,9 +109,14 @@ export default class MapRoot extends Component {
                         });
 
                         marker.on('click', (event) => {
-                            this.resultContainer.setStation({
-                                name: station.SYSTEM_NAM.replace(/([A-Z])([A-Z]+)/g, (_, w1, w2) => w1 + w2.toLowerCase())
-                            });
+                            fetch(`/api/checkLocal/${station.SYSTEM_NO}`, { method: 'POST' })
+                                .then(response => response.json())
+                                .then(data => {
+                                    this.resultContainer.setStation({
+                                        name: station.SYSTEM_NAM.replace(/([A-Z])([A-Z]+)/g, (_, w1, w2) => w1 + w2.toLowerCase()),
+                                        text: data[+station.SYSTEM_NO]
+                                    });
+                                });
                         });
 
                         return marker;

@@ -73,8 +73,8 @@ def checkLocal(STATION_NO):
             report[row['WATER_SYSTEM_NUMBER']] += str("\nViolation Number: "+str(row['VIOLATION_NUMBER'])+", Violation Type: "+str(row['VIOLATION_TYPE_NAME'])+", Chemical: "+str(row['ANALYTE_NAME'])+", Result: "+str(row['RESULT'])+", MCL: "+str(row['MCL'])+", Action issued: "+str(row['ENF_ACTION_TYPE_ISSUED'])+", Action Issue Date: "+date)
     return jsonify(report)
 
-@app.route('/api/<string:lat>/<string:long>', methods = ["GET"])
-def get_stations(lat, long):
+@app.route('/api/<string:lat>/<string:long>/<string:rad>', methods = ["GET"])
+def get_stations(lat, long, rad):
     data = {}
     data['stations'] = []
     data['stations'].append( { "SYSTEM_NO" : "01S04E32C001M",
@@ -102,7 +102,7 @@ def get_stations(lat, long):
         point2 = (float(station['latitude']), float(station['longitude']))
         print(point1)
         distance = geodesic(point1, point2)
-        if distance.km <= 5:
+        if distance.km <= float(rad):
              stationlist['stations'].append(station)
 
     with open('example.json', 'w') as outfile:
