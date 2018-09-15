@@ -1,52 +1,43 @@
 import React, { Component } from 'react';
+import WQResultView from './WQResultView';
+import { Map as LeafletMap, TileLayer } from 'react-leaflet';
 import styled from 'styled-components';
 
 export default class MapRoot extends Component {
+    state = {
+        currentResult: null
+    }
+
     render() {
         const Container = styled.div`
-            width: 60%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            width: 70%;
+            height: 100%;
             margin: 0 auto;
         `;
 
         const Header = styled.div`
             font-size: 32px;
-        `;
-
-        const FormRoot = styled.div`
-            margin-top: 8px;
-        `;
-
-        const Label = styled.div`
-            color: #AAA;
-            text-transform: uppercase;
-            font-size: 11px;
             font-weight: bold;
-            letter-spacing: 1px;
+            margin-bottom: 8px;
         `;
 
-        const Input = styled.input`
+        const MapContainer = styled.div`
             width: 100%;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 18px;
-            border: 1px solid #CCC;
-            box-shadow: 0px 5px 8px -4px rgba(0, 0, 0, 0.2);
-        `;
-
-        const SplitRoot = styled.div`
-            display: flex;
-
+            height: 100%;
         `;
 
         return (
             <Container>
                 <Header>Check your water quality</Header>
-                <FormRoot>
-                    <Label>Location</Label>
-                    <Input/>
-                </FormRoot>
-                <SplitRoot>
-                </SplitRoot>
+                <MapContainer>
+                    <LeafletMap center={[37.87265302, -122.25963921]} zoom={8}>
+                        <TileLayer
+                          attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                    </LeafletMap>
+                </MapContainer>
             </Container>
         );
     }
