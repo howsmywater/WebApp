@@ -72,7 +72,7 @@ def checkArea():
                 if (report[sysNum] == "No violations!"):
                     report[sysNum] = str("Chemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
                 else:
-                    report[sysNum] += str("Chemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
+                    report[sysNum] += str("\nChemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
         return jsonify(report)
 
 @app.route('/api/checkLocal/<int:STATION_NO>', methods = ['POST'])
@@ -97,7 +97,7 @@ def checkLocal(STATION_NO):
             if (report[sysNum] == "No violations!"):
                 report[sysNum] = str("Chemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
             else:
-                report[sysNum] += str("Chemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
+                report[sysNum] += str("\nChemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
     return jsonify(report)
 
 @app.route('/api/<string:lat>/<string:lng>/<string:rad>', methods = ["GET"])
