@@ -19,7 +19,7 @@ def check():
 def map():
     return render_template('map.html')
 
-@app.route('/map/<string:lat>/<string:long>', methods = ["GET"])
+@app.route('/api/<string:lat>/<string:long>', methods = ["GET"])
 def get_stations(lat, long):
     data = {}
     data['stations'] = []

@@ -9,7 +9,7 @@ export default class MapRoot extends Component {
         `;
 
         const Header = styled.div`
-            font-size: 32px;
+            font-size: 25px;
         `;
 
         const FormRoot = styled.div`
@@ -40,7 +40,7 @@ export default class MapRoot extends Component {
 
         return (
             <Container>
-                <Header>Check your water quality</Header>
+                <h4>Check your water quality</h4>
                 <FormRoot>
                     <Label>Location</Label>
                     <Input/>
