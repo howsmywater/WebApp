@@ -10,21 +10,30 @@ export default class MapRoot extends Component {
 
     render() {
         const Container = styled.div`
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             width: 70%;
             height: 100%;
+            box-sizing: border-box;
             margin: 0 auto;
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
         `;
 
         const Header = styled.div`
-            font-size: 32px;
+            font-size: 2rem;
             font-weight: bold;
             margin-bottom: 8px;
         `;
 
         const MapContainer = styled.div`
             width: 100%;
-            height: 100%;
+            flex: 1;
+            overflow: hidden;
+            border-radius: 4px;
+            border-radius: 8px;
+            position: relative;
+            z-index: 500;
+            box-shadow: 0px 5px 16px -8px rgba(0, 0, 0, 0.5);
         `;
 
         return (
