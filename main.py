@@ -15,6 +15,19 @@ redis_password = ""
 
 red = redis.StrictRedis(redis_host, redis_port, redis_password)
 
+all_stations = dict()
+
+# Setup redis
+with open('waterSourcesLarge.json', 'r') as f:
+    for station in json.loads(f.read()):
+        station_no = station['SYSTEM_NO']
+
+        all_stations[station_no] = station
+
+        lat = station['latitude']
+        lng = station['longitude']
+        red.geoadd(f'hmw:station', lng, lat, str(station_no))
+
 @app.route('/')
 @app.route('/check')
 def check():
@@ -67,7 +80,6 @@ def checkLocal(STATION_NO):
     activeViol = pd.read_json("activeViolations.json", orient='records')
     activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].str[2:]
     activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].apply(pd.to_numeric)
-    recentReportDf = pd.read_json("recentReport.json", orient='records')
     recentReport = pd.read_json("recentReportFindingsPSTrue.json", orient='records')
     numList = [STATION_NO]
     sysNumViols = activeViol.loc[activeViol['WATER_SYSTEM_NUMBER'].isin(numList)]
@@ -88,42 +100,10 @@ def checkLocal(STATION_NO):
                 report[sysNum] += str("Chemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
     return jsonify(report)
 
-@app.route('/api/<string:lat>/<string:long>/<string:rad>', methods = ["GET"])
-def get_stations(lat, long, rad):
-    data = {}
-    data['stations'] = []
-    data['stations'].append( { "SYSTEM_NO" : "01S04E32C001M",
-    "LATITUDE" : "37.8073",
-    "LONGITUDE" : "-121.562",
-    "SYSTEM_NAM" : "test station 1" } )
-
-    data['stations'].append( { "SYSTEM_NO" : "00000000000",
-    "LATITUDE" : "39.8073",
-    "LONGITUDE" : "-131.562",
-    "SYSTEM_NAM" : "test station 2" } )
-
-    #Above this line was just making a test JSON file to pull list of stations from
-    stationlist = {}
-    stationlist['stations'] = []
-
-    point1 = (float(lat), float(long))
-
-    testPoint = (37.672371, -121.839577)
-
-    with open('waterSourcesLarge.json', 'r') as f:
-        list = json.loads(f.read())
-
-    for station in list:
-        point2 = (float(station['latitude']), float(station['longitude']))
-        print(point1)
-        distance = geodesic(point1, point2)
-        if distance.km <= float(rad):
-             stationlist['stations'].append(station)
-
-    with open('example.json', 'w') as outfile:
-        json.dump(list, outfile)
-
-    return jsonify(stationlist)
+@app.route('/api/<string:lat>/<string:lng>/<string:rad>', methods = ["GET"])
+def get_stations(lat, lng, rad):
+    stations = red.georadius('hmw:station', float(lng), float(lat), float(rad), 'km')
+    return jsonify([all_stations[station_id] for station_id in stations])
 
 
 if __name__ == '__main__':

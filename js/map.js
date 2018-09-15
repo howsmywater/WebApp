@@ -94,7 +94,7 @@ export default class MapRoot extends Component {
         const radius = mapDistance / 1000;
         fetch(`/api/${center.lat}/${center.lng}/${radius}`)
             .then(response => response.json())
-            .then(({ stations }) => {
+            .then((stations) => {
 
                 // Remove old markers
                 if (this.oldGroup) {
