@@ -40,19 +40,26 @@ def checkArea():
         activeViol = pd.read_json("activeViolations.json", orient='records')
         activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].str[2:]
         activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].apply(pd.to_numeric)
-
-        sysList = pd.read_json(request.get_json(), orient = 'records')
+        recentReportDf = pd.read_json("recentReport.json", orient='records')
+        recentReport = pd.read_json("recentReportFindingsPSTrue.json", orient='records')
+        sysList = pd.read_json("example.json", orient='records')
         sysList['SYSTEM_NO'] = sysList['SYSTEM_NO'].apply(pd.to_numeric)
         numList = sysList.SYSTEM_NO.unique()
         sysNumViols = activeViol.loc[activeViol['WATER_SYSTEM_NUMBER'].isin(numList)]
         report = dict((el,"No violations!") for el in numList)
-
         for idx, row in sysNumViols.iterrows():
             date = str(row['ENF_ACTION_ISSUE_DATE'])
             if (report[row['WATER_SYSTEM_NUMBER']] == "No violations!"):
                 report[row['WATER_SYSTEM_NUMBER']] = str("Violation Number: "+str(row['VIOLATION_NUMBER'])+", Violation Type: "+str(row['VIOLATION_TYPE_NAME'])+", Chemical: "+str(row['ANALYTE_NAME'])+", Result: "+str(row['RESULT'])+", MCL: "+str(row['MCL'])+", Action issued: "+str(row['ENF_ACTION_TYPE_ISSUED'])+", Action Issue Date: " + date)
             else:
                 report[row['WATER_SYSTEM_NUMBER']] += str("\nViolation Number: "+str(row['VIOLATION_NUMBER'])+", Violation Type: "+str(row['VIOLATION_TYPE_NAME'])+", Chemical: "+str(row['ANALYTE_NAME'])+", Result: "+str(row['RESULT'])+", MCL: "+str(row['MCL'])+", Action issued: "+str(row['ENF_ACTION_TYPE_ISSUED'])+", Action Issue Date: "+date)
+        for sysNum in numList:
+            recentData = recentReport[recentReport['PRIM_STA_C'] == sysNum]
+            for idx, row in recentData.iterrows():
+                if (report[sysNum] == "No violations!"):
+                    report[sysNum] = str("Chemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
+                else:
+                    report[sysNum] += str("Chemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
         return jsonify(report)
 
 @app.route('/api/checkLocal/<int:STATION_NO>', methods = ['POST'])
@@ -60,7 +67,8 @@ def checkLocal(STATION_NO):
     activeViol = pd.read_json("activeViolations.json", orient='records')
     activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].str[2:]
     activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].apply(pd.to_numeric)
-
+    recentReportDf = pd.read_json("recentReport.json", orient='records')
+    recentReport = pd.read_json("recentReportFindingsPSTrue.json", orient='records')
     numList = [STATION_NO]
     sysNumViols = activeViol.loc[activeViol['WATER_SYSTEM_NUMBER'].isin(numList)]
     report = dict((el,"No violations!") for el in numList)
@@ -71,6 +79,13 @@ def checkLocal(STATION_NO):
             report[row['WATER_SYSTEM_NUMBER']] = str("Violation Number: "+str(row['VIOLATION_NUMBER'])+", Violation Type: "+str(row['VIOLATION_TYPE_NAME'])+", Chemical: "+str(row['ANALYTE_NAME'])+", Result: "+str(row['RESULT'])+", MCL: "+str(row['MCL'])+", Action issued: "+str(row['ENF_ACTION_TYPE_ISSUED'])+", Action Issue Date: " + date)
         else:
             report[row['WATER_SYSTEM_NUMBER']] += str("\nViolation Number: "+str(row['VIOLATION_NUMBER'])+", Violation Type: "+str(row['VIOLATION_TYPE_NAME'])+", Chemical: "+str(row['ANALYTE_NAME'])+", Result: "+str(row['RESULT'])+", MCL: "+str(row['MCL'])+", Action issued: "+str(row['ENF_ACTION_TYPE_ISSUED'])+", Action Issue Date: "+date)
+    for sysNum in numList:
+        recentData = recentReport[recentReport['PRIM_STA_C'] == sysNum]
+        for idx, row in recentData.iterrows():
+            if (report[sysNum] == "No violations!"):
+                report[sysNum] = str("Chemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
+            else:
+                report[sysNum] += str("Chemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
     return jsonify(report)
 
 @app.route('/api/<string:lat>/<string:long>/<string:rad>', methods = ["GET"])
@@ -95,7 +110,7 @@ def get_stations(lat, long, rad):
 
     testPoint = (37.672371, -121.839577)
 
-    with open('waterSourcesSmall.json', 'r') as f:
+    with open('waterSourcesLarge.json', 'r') as f:
         list = json.loads(f.read())
 
     for station in list:
