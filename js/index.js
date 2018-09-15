@@ -6,6 +6,6 @@ let MAP_NODE = 'map-root',
 if (MAP = document.getElementById(MAP_NODE)) {
     import('./map.js')
         .then(MapRoot => {
-            render(MAP, MapRoot)
+            render(<MapRoot />, MAP)
         });
 }
