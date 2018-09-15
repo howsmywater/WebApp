@@ -41,10 +41,10 @@ def checkArea():
         activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].str[2:]
         activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].apply(pd.to_numeric)
 
-        sysList = pd.read_json(request.get_json(), orient = 'records')
-        sysList['SYSTEM_NO'] = sysList['SYSTEM_NO'].apply(pd.to_numeric)
-        numList = sysList.SYSTEM_NO.unique()
-        sysNumViols = activeViol.loc[activeViol['WATER_SYSTEM_NUMBER'].isin(numList)]
+    sysList = pd.read_json(request.get_json(), orient = 'records')
+    sysList['SYSTEM_NO'] = sysList['SYSTEM_NO'].apply(pd.to_numeric)
+    numList = sysList.SYSTEM_NO.unique()
+    sysNumViols = activeViol.loc[activeViol['WATER_SYSTEM_NUMBER'].isin(numList)]
 
         report = dict((el,"No violations!") for el in numList)
 
@@ -60,6 +60,7 @@ def checkArea():
 @app.route('/api/checkLocal/<int:STATION_NO>', methods = ['POST'])
 def checkLocal(STATION_NO):
 
+    return jsonify(report)
 
 @app.route('/api/<string:lat>/<string:long>', methods = ["GET"])
 def get_stations(lat, long):

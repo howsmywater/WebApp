@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import CurrentLocation from './CurrentLocation';
 import SearchInput from './SearchInput';
+import LocationIndicator from './LocationIndicator';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import { MapComponent } from 'react-leaflet';
 
@@ -44,12 +45,14 @@ export default class MapSearch extends MapComponent {
             <SearchWrapper>
                 <img src="/static/search.svg"/>
                 <SearchContent>
-                    { this.isEntering ?
-                        <SearchInput/> :
+                    { this.state.isEntering ?
+                        <SearchInput
+                            didSetLocation={this.didSetLocation.bind(this, false)} /> :
                         this.state.isCurrentLocation ?
                         <CurrentLocation
-                            didSetLocation={this.didSetLocation.bind(this)} /> :
-                        <LocationIndicator /> }
+                            didSetLocation={this.didSetLocation.bind(this, true)} /> :
+                        <LocationIndicator
+                            name={this.state.name} /> }
                 </SearchContent>
                 <img onClick={this.setEntering.bind(this)} src="/static/close.svg"/>
             </SearchWrapper>
@@ -66,7 +69,13 @@ export default class MapSearch extends MapComponent {
     /**
      * Called when location set
      */
-    didSetLocation({ lat, lng }) {
-        console.log(this.leafletElement);
+    didSetLocation(isCurrent, { lat, lng, name = null }) {
+        this.setState({
+            isCurrentLocation: isCurrent,
+            isEntering: false,
+            name: name
+        });
+
+        this.props.didSetLocation({ lat, lng })
     }
 }
