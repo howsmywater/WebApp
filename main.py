@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request, jso
 from flask_wtf import FlaskForm
 from flask_sqlalchemy import SQLAlchemy
 from math import sin, cos, sqrt, atan2, radians
+import pandas as pd
 import requests, json, csv, redis
 from geopy.distance import geodesic
 
@@ -31,16 +32,29 @@ def test():
 
 @app.route('/home/<int:STATION_NO>', methods = ["POST"])
 def get_analysis(STATION_NO):
-    pass
+    url = "this"
 
-@app.route('/api/check', methods = ['POST'])
+@app.route('/api/check', methods = ['GET'])
 def checkLocal():
-    if request.method == "POST":
-        json_dict = request.get_json()
-        # for
-        #Stations within range stored in json_dict
-        data = {}
-        data['reports'] = [] #report
+    activeViol = pd.read_json("activeViolations.json", orient='records')
+    activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].str[2:]
+    activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].apply(pd.to_numeric)
+
+    sysList = pd.read_json(request.get_json(), orient = 'records')
+    sysList['SYSTEM_NO'] = sysList['SYSTEM_NO'].apply(pd.to_numeric)
+    numList = sysList.SYSTEM_NO.unique()
+    sysNumViols = activeViol.loc[activeViol['WATER_SYSTEM_NUMBER'].isin(numList)]
+
+    report = dict((el,"No violations!") for el in numList)
+
+    for idx, row in sysNumViols.iterrows():
+        date = str(row['ENF_ACTION_ISSUE_DATE'])
+        if (report[row['WATER_SYSTEM_NUMBER']] == "No violations!"):
+            report[row['WATER_SYSTEM_NUMBER']] = str("Violation Number: "+str(row['VIOLATION_NUMBER'])+", Violation Type: "+str(row['VIOLATION_TYPE_NAME'])+", Chemical: "+str(row['ANALYTE_NAME'])+", Result: "+str(row['RESULT'])+", MCL: "+str(row['MCL'])+", Action issued: "+str(row['ENF_ACTION_TYPE_ISSUED'])+", Action Issue Date: " + date)
+        else:
+            report[row['WATER_SYSTEM_NUMBER']] += str("\nViolation Number: "+str(row['VIOLATION_NUMBER'])+", Violation Type: "+str(row['VIOLATION_TYPE_NAME'])+", Chemical: "+str(row['ANALYTE_NAME'])+", Result: "+str(row['RESULT'])+", MCL: "+str(row['MCL'])+", Action issued: "+str(row['ENF_ACTION_TYPE_ISSUED'])+", Action Issue Date: "+date)
+
+    return jsonify(report)
 
 @app.route('/api/<string:lat>/<string:long>', methods = ["GET"])
 def get_stations(lat, long):
