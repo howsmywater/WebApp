@@ -12,8 +12,19 @@ body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
   text-align: center;
-  background-image: url("shoes-blue.jpg");
+  background-image: ;
   background-size: cover;
+}
+
+#map {
+  height: 100%;
+}
+
+#search-bar{
+  margin-top: 80px;
+  position: fixed;
+  height: 25px;
+  width: 60%;
 }
 
 #aboutPage h1, h2, h3, h4, h5{
@@ -64,10 +75,23 @@ body {
   font-weight: 500;
 }
 
+#data-display {
+  width: 40%;
+  height: 100%;
+  margin-top: 50px;
+  float: right;
+  display: inline-block;
+}
+
+#data-block {
+  width: 100%;
+  height: 20%;
+}
+
 .jumbotron {
     padding: 2rem 1rem;
     margin-bottom: 2rem;
-    background-image: url('shoes-blue.jpg');
+    background-image: url('water.jpg');
 }
 
 .myclass {
