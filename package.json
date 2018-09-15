@@ -1,0 +1,30 @@
+{
+  "name": "howsmywater",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/howsmywater/WebApp.git"
+  },
+  "author": "Vihan B <contact@vihan.org> (vihan.org)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/howsmywater/WebApp/issues"
+  },
+  "homepage": "https://github.com/howsmywater/WebApp#readme",
+  "dependencies": {
+    "@babel/preset-env": "^7.0.0",
+    "babel-loader": "^8.0.2",
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1"
+  },
+  "devDependencies": {
+    "webpack": "^4.19.0",
+    "webpack-cli": "^3.1.0"
+  }
+}

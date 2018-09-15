@@ -4,3 +4,5 @@ Include/
 Lib/
 Scripts/
 Tcl/
+static/lib
+node_modules
