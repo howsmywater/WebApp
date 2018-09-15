@@ -8,7 +8,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'static/lib'),
         filename: '[name].js',
-        publicPath: '/static/lib'
+        publicPath: '/static/lib/'
     },
     devtool: 'source-map',
     mode: 'development',
