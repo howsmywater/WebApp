@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import WQResultView from './WQResultView';
 import MapSearch from './MapSearch';
+import ResultContainer from './ResultContainer';
 import L from 'leaflet';
 import { Map as LeafletMap, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components';
@@ -9,6 +10,10 @@ export default class MapRoot extends Component {
     constructor(props) {
         super(props);
         this.oldGroup = null;
+    }
+
+    state = {
+        activeStation: null
     }
 
     render() {
@@ -50,12 +55,14 @@ export default class MapRoot extends Component {
                 <MapContainer>
                     <LeafletMap
                         center={[37.87265302, -122.25963921]}
-                        zoom={8}
+                        zoom={12}
                         maxZoom={300}
                         onMoveend={this.shouldUpdatePoints.bind(this)}
                         ref={map => this.map = map.leafletElement}>
                         <MapSearch
                             didSetLocation={this.didSetLocation}/>
+                        <ResultContainer
+                            setStationCall={setStation => this.resultContainer = setStation} />
                         <TileLayer
                           attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                           url="https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png?apikey=db5ae1f5778a448ca662554581f283c5"
@@ -99,7 +106,9 @@ export default class MapRoot extends Component {
                         });
 
                         marker.on('click', (event) => {
-                            console.log(`Opening ${station}`, station);
+                            this.resultContainer.setStation({
+                                name: station.SYSTEM_NAM.replace(/([A-Z])([A-Z]+)/g, (_, w1, w2) => w1 + w2.toLowerCase())
+                            });
                         });
 
                         return marker;
