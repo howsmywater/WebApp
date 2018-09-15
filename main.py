@@ -103,7 +103,7 @@ def checkLocal(STATION_NO):
 @app.route('/api/<string:lat>/<string:lng>/<string:rad>', methods = ["GET"])
 def get_stations(lat, lng, rad):
     stations = red.georadius('hmw:station', float(lng), float(lat), float(rad), 'km')
-    return jsonify([all_stations[station_id] for station_id in stations])
+    return jsonify([all_stations[station_id] for station_id in stations][:1000])
 
 
 if __name__ == '__main__':

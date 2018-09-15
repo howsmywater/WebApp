@@ -10,6 +10,7 @@ export default class MapRoot extends Component {
     constructor(props) {
         super(props);
         this.oldGroup = null;
+        this.lastUpdate = null;
     }
 
     state = {
@@ -81,48 +82,54 @@ export default class MapRoot extends Component {
      * Loads the markers for a given latitude/longitude
      */
     shouldUpdatePoints(event) {
-        const map = event.target;
-        const center = map.getCenter();
+        if (this.lastUpdate) {
+            clearTimeout(this.lastUpdate);
+        }
 
-        const stationIcon = L.divIcon({
-            html: `<img src="/static/point.svg" />`,
-            iconSize: [24, 24]
-        })
+        this.lastUpdate = setTimeout(() => {
+            const map = event.target;
+            const center = map.getCenter();
 
-        const mapBoundNorthEast = map.getBounds().getNorthEast();
-        const mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
-        const radius = mapDistance / 1000;
-        fetch(`/api/${center.lat}/${center.lng}/${radius}`)
-            .then(response => response.json())
-            .then((stations) => {
+            const stationIcon = L.divIcon({
+                html: `<img src="/static/point.svg" />`,
+                iconSize: [24, 24]
+            })
 
-                // Remove old markers
-                if (this.oldGroup) {
-                    this.map.removeLayer(L.layerGroup);
-                }
+            const mapBoundNorthEast = map.getBounds().getNorthEast();
+            const mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
+            const radius = mapDistance / 1000;
+            fetch(`/api/${center.lat}/${center.lng}/${radius}`)
+                .then(response => response.json())
+                .then((stations) => {
 
-                const newMarkers = stations.map(
-                    station => {
-                        const marker = new L.Marker([station.latitude, station.longitude], {
-                            className: 'point-style',
-                            icon: stationIcon
-                        });
+                    // Remove old markers
+                    if (this.oldGroup) {
+                        this.map.removeLayer(L.layerGroup);
+                    }
 
-                        marker.on('click', (event) => {
-                            fetch(`/api/checkLocal/${station.SYSTEM_NO}`, { method: 'POST' })
-                                .then(response => response.json())
-                                .then(data => {
-                                    this.resultContainer.setStation({
-                                        name: station.SYSTEM_NAM.replace(/([A-Z])([A-Z]+)/g, (_, w1, w2) => w1 + w2.toLowerCase()),
-                                        text: data[+station.SYSTEM_NO]
+                    const newMarkers = stations.map(
+                        station => {
+                            const marker = new L.Marker([station.latitude, station.longitude], {
+                                className: 'point-style',
+                                icon: stationIcon
+                            });
+
+                            marker.on('click', (event) => {
+                                fetch(`/api/checkLocal/${station.SYSTEM_NO}`, { method: 'POST' })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        this.resultContainer.setStation({
+                                            name: station.SYSTEM_NAM.replace(/([A-Z])([A-Z]+)/g, (_, w1, w2) => w1 + w2.toLowerCase()),
+                                            text: data[+station.SYSTEM_NO]
+                                        });
                                     });
-                                });
-                        });
+                            });
 
-                        return marker;
+                            return marker;
+                    });
+
+                    L.layerGroup(newMarkers).addTo(this.map);
                 });
-
-                L.layerGroup(newMarkers).addTo(this.map);
-            });
+        }, 800);
     }
 }
