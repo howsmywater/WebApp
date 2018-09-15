@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import WQResultView from './WQResultView';
 import MapSearch from './MapSearch';
-import { Map as LeafletMap, TileLayer } from 'react-leaflet';
+import L from 'leaflet';
+import { Map as LeafletMap, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components';
 
 export default class MapRoot extends Component {
-    state = {
-        currentResult: null
+    constructor(props) {
+        super(props);
+        this.oldGroup = null;
     }
 
     render() {
@@ -37,22 +39,69 @@ export default class MapRoot extends Component {
             box-shadow: 0px 5px 16px -8px rgba(0, 0, 0, 0.5);
         `;
 
+        const icon = new L.divIcon({
+            iconSize: L.point(40, 40, true),
+            html: `<span>S</span>`
+        });
+
         return (
             <Container>
                 <Header>Check your water quality</Header>
                 <MapContainer>
-                    <LeafletMap center={[37.87265302, -122.25963921]} zoom={8}>
+                    <LeafletMap
+                        center={[37.87265302, -122.25963921]}
+                        zoom={8}
+                        onMoveend={this.shouldUpdatePoints.bind(this)}
+                        ref={map => this.map = map.leafletElement}>
                         <MapSearch
                             didSetLocation={this.didSetLocation.bind(this)}/>
                         <TileLayer
                           attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                          detectRetina={true}
-                        />
+                          detectRetina={true} />
                     </LeafletMap>
                 </MapContainer>
             </Container>
         );
+    }
+
+    /**
+     * Loads the markers for a given latitude/longitude
+     */
+    shouldUpdatePoints(event) {
+        const map = event.target;
+        const center = map.getCenter();
+
+        const stationIcon = L.divIcon({
+            html: `<img src="/static/point.svg" />`,
+            iconSize: [24, 24]
+        })
+
+        fetch(`/api/${center.lat}/${center.lng}`)
+            .then(response => response.json())
+            .then(({ stations }) => {
+
+                // Remove old markers
+                if (this.oldGroup) {
+                    this.map.removeLayer(L.layerGroup);
+                }
+
+                const newMarkers = stations.map(
+                    station => {
+                        const marker = new L.Marker([station.latitude, station.longitude], {
+                            className: 'point-style',
+                            icon: stationIcon
+                        });
+
+                        marker.on('click', (event) => {
+                            console.log(`Opening ${station}`, station);
+                        });
+
+                        return marker;
+                });
+
+                L.layerGroup(newMarkers).addTo(this.map);
+            });
     }
 
     /**
