@@ -13,11 +13,11 @@ export default class MapRoot extends Component {
 
     render() {
         const Container = styled.div`
-            width: 70%;
+            width: 100%;
             height: 100%;
             box-sizing: border-box;
             margin: 0 auto;
-            padding: 2rem 0;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
         `;
@@ -51,18 +51,23 @@ export default class MapRoot extends Component {
                     <LeafletMap
                         center={[37.87265302, -122.25963921]}
                         zoom={8}
+                        maxZoom={300}
                         onMoveend={this.shouldUpdatePoints.bind(this)}
                         ref={map => this.map = map.leafletElement}>
                         <MapSearch
-                            didSetLocation={this.didSetLocation.bind(this)}/>
+                            didSetLocation={this.didSetLocation}/>
                         <TileLayer
                           attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          url="https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png?apikey=db5ae1f5778a448ca662554581f283c5"
                           detectRetina={true} />
                     </LeafletMap>
                 </MapContainer>
             </Container>
         );
+    }
+
+    didSetLocation = ({ lat, lng }) => {
+        this.map.flyTo(new L.LatLng(lat, lng), 14);
     }
 
     /**
@@ -102,12 +107,5 @@ export default class MapRoot extends Component {
 
                 L.layerGroup(newMarkers).addTo(this.map);
             });
-    }
-
-    /**
-     * Called when location is set
-     */
-    didSetLocation({ lat, lng }) {
-
     }
 }

@@ -1,34 +1,43 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+const Input = styled.input`
+    padding: 0;
+    margin: 0;
+    border: none;
+    outline: none;
+    font-size: 1.6em;
+    height: 100%;
+    width: 100%;
+`;
+
 export default class CurrentLocation extends Component {
 
-    render() {
-        const CLWrap = styled.div`
-            flex: 1;
-            box-sizing: border-box;
-            padding: 0.5rem;
-            font-size: 1.2rem;
-            display: flex;
-            flex-direction: row;
-            height: 100%;
-            align-items: center;
-        `;
-
-        const Image = styled.img`
-            height: 1em;
-            margin-right: 8px;
-        `;
-
-        const Text = styled.span`
-            font-family: 300;
-        `;
-
-        return (
-            <CLWrap>
-                <Image src="/static/currentLocation.svg"/>
-                <Text>Current Location</Text>
-            </CLWrap>
+    componentDidMount() {
+        this.autocomplete = new google.maps.places.Autocomplete(
+            this.inputNode,
+            { types: ['geocode'] }
         );
+
+        this.autocomplete.addListener('place_changed', (event) => {
+            const place = this.autocomplete.getPlace();
+            const newLocation = place.geometry.location;
+            this.props.didSetLocation({
+                lat: newLocation.lat(),
+                lng: newLocation.lng(),
+                name: place.name
+            });
+        });
+    }
+
+    render() {
+        this.input = <Input type='text' innerRef={input => this.inputNode = input}/>
+        return (
+            this.input
+        );
+    }
+
+    shouldLoadResults = () => {
+
     }
 }

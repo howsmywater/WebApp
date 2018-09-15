@@ -31,13 +31,13 @@ def test():
 
 @app.route('/home/<int:STATION_NO>', methods = ["POST"])
 def get_analysis(STATION_NO):
+    pass
 
-
-@app.route('/api/check' methods = ['POST'])
+@app.route('/api/check', methods = ['POST'])
 def checkLocal():
     if request.method == "POST":
         json_dict = request.get_json()
-        for 
+        # for
         #Stations within range stored in json_dict
         data = {}
         data['reports'] = [] #report
