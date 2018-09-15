@@ -23,10 +23,6 @@ def check():
 def map():
     return render_template('map.html')
 
-stationlist = {
-
-}
-
 @app.route('/map/api/<string:lat>/<string:long>', methods = ["GET"])
 def get_stations(lat, long):
     data = {}
