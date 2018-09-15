@@ -57,7 +57,7 @@ export default class MapRoot extends Component {
                     <LeafletMap
                         center={[37.87265302, -122.25963921]}
                         zoom={12}
-                        maxZoom={300}
+                        maxZoom={8}
                         onMoveend={this.shouldUpdatePoints.bind(this)}
                         ref={map => this.map = map.leafletElement}>
                         <MapSearch
