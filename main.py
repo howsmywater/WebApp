@@ -61,8 +61,6 @@ def checkLocal(STATION_NO):
     activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].str[2:]
     activeViol['WATER_SYSTEM_NUMBER'] = activeViol['WATER_SYSTEM_NUMBER'].apply(pd.to_numeric)
 
-    sysList = pd.read_json(request.get_json(), orient = 'records')
-    sysList['SYSTEM_NO'] = sysList['SYSTEM_NO'].apply(pd.to_numeric)
     numList = [STATION_NO]
     sysNumViols = activeViol.loc[activeViol['WATER_SYSTEM_NUMBER'].isin(numList)]
     report = dict((el,"No violations!") for el in numList)
@@ -99,7 +97,6 @@ def get_stations(lat, long):
 
     with open('waterSourcesSmall.json', 'r') as f:
         list = json.loads(f.read())
-
 
     for station in list:
         point2 = (float(station['latitude']), float(station['longitude']))
