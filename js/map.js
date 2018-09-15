@@ -57,7 +57,7 @@ export default class MapRoot extends Component {
                     <LeafletMap
                         center={[37.87265302, -122.25963921]}
                         zoom={12}
-                        maxZoom={8}
+                        maxZoom={300}
                         onMoveend={this.shouldUpdatePoints.bind(this)}
                         ref={map => this.map = map.leafletElement}>
                         <MapSearch
@@ -73,6 +73,8 @@ export default class MapRoot extends Component {
             </Container>
         );
     }
+
+    // Old tile: https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
 
     didSetLocation = ({ lat, lng }) => {
         this.map.flyTo(new L.LatLng(lat, lng), 14);
@@ -93,7 +95,12 @@ export default class MapRoot extends Component {
             const stationIcon = L.divIcon({
                 html: `<img src="/static/point.svg" />`,
                 iconSize: [24, 24]
-            })
+            });
+
+            const selectedIcon = L.divIcon({
+                html: `<img src="/static/selectedPoint.svg" />`,
+                iconSize: [24, 24]
+            });
 
             const mapBoundNorthEast = map.getBounds().getNorthEast();
             const mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
@@ -114,7 +121,16 @@ export default class MapRoot extends Component {
                                 icon: stationIcon
                             });
 
+                            let lastSelectedMarker = null;
                             marker.on('click', (event) => {
+                                console.log(lastSelectedMarker);
+                                if (lastSelectedMarker) {
+                                    lastSelectedMarker.setIcon(stationIcon);
+                                }
+
+                                marker.setIcon(selectedIcon);
+                                lastSelectedMarker = marker;
+
                                 fetch(`/api/checkLocal/${station.SYSTEM_NO}`, { method: 'POST' })
                                     .then(response => response.json())
                                     .then(data => {
