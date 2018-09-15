@@ -25,7 +25,8 @@
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "react-google-maps": "^9.4.5",
-    "react-leaflet": "^2.0.1"
+    "react-leaflet": "^2.0.1",
+    "react-leaflet-markercluster": "^1.1.8"
   },
   "devDependencies": {
     "@babel/core": "^7.0.1",
