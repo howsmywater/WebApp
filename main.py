@@ -59,7 +59,7 @@ def checkArea():
 
 @app.route('/api/checkLocal/<int:STATION_NO>', methods = ['POST'])
 def checkLocal(STATION_NO):
-
+    
     return jsonify(report)
 
 @app.route('/api/<string:lat>/<string:long>', methods = ["GET"])
