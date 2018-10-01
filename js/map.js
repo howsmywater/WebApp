@@ -89,7 +89,7 @@ export default class MapRoot extends Component {
         }
 
         this.lastUpdate = setTimeout(() => {
-            const map = event.target;
+            var map = event.target;
             const center = map.getCenter();
 
             const stationIcon = L.divIcon({

@@ -21,12 +21,14 @@ all_stations = dict()
 with open('waterSourcesLarge.json', 'r') as f:
     for station in json.loads(f.read()):
         station_no = station['SYSTEM_NO']
-
         all_stations[station_no] = station
-
         lat = station['latitude']
         lng = station['longitude']
         red.geoadd(f'hmw:station', lng, lat, str(station_no))
+
+def checkForV(lat, lng):
+    reports = pd.read_json("recentReportFindingsPSTrue.json", orient = 'records')
+    
 
 @app.route('/')
 @app.route('/check')
