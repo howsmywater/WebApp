@@ -1,10 +1,7 @@
 from flask import Flask, render_template, url_for, flash, redirect, request, jsonify
-from flask_wtf import FlaskForm
-from flask_sqlalchemy import SQLAlchemy
 from math import sin, cos, sqrt, atan2, radians
 import pandas as pd
 import requests, json, csv, redis
-from geopy.distance import geodesic
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "219nv8438vncjkxjfg9904jkcod4niv90"
@@ -107,4 +104,4 @@ def get_stations(lat, lng, rad):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=4469)
