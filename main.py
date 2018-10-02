@@ -106,4 +106,4 @@ def get_stations(lat, lng, rad):
 
 
 if __name__ == '__main__':
-    app.run(port=4469)
+    app.run()
