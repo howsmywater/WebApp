@@ -6,3 +6,4 @@ Scripts/
 Tcl/
 static/lib
 node_modules
+venv

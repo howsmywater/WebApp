@@ -1,11 +1,14 @@
 from flask import Flask, render_template, url_for, flash, redirect, request, jsonify
 from math import sin, cos, sqrt, atan2, radians
 import pandas as pd
-import requests, json, csv, redis
+import requests, json, csv, redis, os
+from werkzeug.routing import Rule
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "219nv8438vncjkxjfg9904jkcod4niv90"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.url_rule_class = lambda path, **options: Rule(os.environ.get('APPLICATION_ROOT', '') + path, **options)
 redis_port = 6379
 redis_host = "localhost"
 redis_password = ""
