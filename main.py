@@ -68,9 +68,14 @@ def checkArea():
                 report[row['WATER_SYSTEM_NUMBER']] += str("\nViolation Number: "+str(row['VIOLATION_NUMBER'])+", Violation Type: "+str(row['VIOLATION_TYPE_NAME'])+", Chemical: "+str(row['ANALYTE_NAME'])+", Result: "+str(row['RESULT'])+", MCL: "+str(row['MCL'])+", Action issued: "+str(row['ENF_ACTION_TYPE_ISSUED'])+", Action Issue Date: "+date)
         for sysNum in numList:
             recentData = recentReport[recentReport['PRIM_STA_C'] == sysNum]
+            dict = {}
             for idx, row in recentData.iterrows():
                 if (report[sysNum] == "No violations!"):
-                    report[sysNum] = str("Chemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
+                    report[sysNum] = []
+                    dict['chemical'] = str(row['CHEMICAL__'])
+                    dict['finding'] = str(row['FINDING'])
+                    dict['mcl'] = str(row['MCL'])
+                    report[sysNum].append(dict)
                 else:
                     report[sysNum] += str("\nChemical: "+str(row['CHEMICAL__'])+", Finding: " +str(row['FINDING'] )+", MCL: "+ str(row['MCL']))
         return jsonify(report)
